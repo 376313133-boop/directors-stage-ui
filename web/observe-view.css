@@ -1,0 +1,14 @@
+#observe-canvas { position:absolute; inset:0; display:block; width:100%; height:100%; touch-action:none; cursor:grab; background:#151819; }
+#observe-canvas[hidden] { display:none !important; }
+#observe-canvas.dragging { cursor:grabbing; }
+.observe-hint { position:absolute; bottom:7px; left:8px; max-width:calc(100% - 16px); pointer-events:none; font-size:10px; color:#c3cec7; background:#101613d9; padding:4px 8px; border-radius:7px; line-height:1.5; }
+.stage-controls { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:5px 8px; padding:0 4px 7px; flex:none; }
+.stage-view-options { display:flex; align-items:center; padding:2px; gap:2px; background:#ffffff06; border:1px solid #ffffff10; border-radius:10px; }
+.stage-view-options button { min-height:27px; padding:3px 7px; font-size:10px; border-radius:7px; border-color:transparent; background:transparent; color:var(--muted); white-space:nowrap; }
+.stage-view-options button[aria-pressed=true] { color:var(--text); border-color:#ffffff24; background:#ffffff16; box-shadow:0 1px 3px #0005; }
+.stage-observe-tools { display:flex; align-items:center; gap:8px; }
+.stage-wall-toggle { display:flex; align-items:center; gap:4px; font-size:10px; color:var(--muted); white-space:nowrap; }
+.stage-wall-toggle input { width:12px; height:12px; margin:0; accent-color:var(--mint); }
+#use-observe-view { font-size:10px; padding:3px 8px; min-height:27px; border-radius:8px; background:#d2e1d712; border-color:#d2e1d736; }
+.top-view.showing-reference .map-view-actions,.top-view.showing-reference .legend { display:none; }
+@media(max-width:700px){.stage-controls{gap:4px;padding-inline:0}.stage-view-options{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}.stage-view-options button{padding:2px;min-height:24px;font-size:9px}.stage-observe-tools{width:100%;justify-content:space-between}.observe-hint{font-size:9px;left:4px;bottom:4px;padding:3px 5px}.stage-wall-toggle{font-size:9px}#use-observe-view{font-size:9px;min-height:23px}}

@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "title": "示例片场",
+  "output": {
+    "width": 640,
+    "height": 360,
+    "fps": 24
+  },
+  "videos": [
+    {
+      "id": "V01",
+      "title": "示例视频"
+    }
+  ],
+  "scenes": {
+    "studio": {
+      "title": "室内空间",
+      "objects": [
+        {
+          "id": "A",
+          "actor_id": "A",
+          "label": "人物 A",
+          "shape": "box",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "size": [
+            0.5,
+            1.4,
+            0.3
+          ],
+          "color": "#a5a8ad"
+        },
+        {
+          "id": "A_head",
+          "actor_id": "A",
+          "label": "人物 A · 头部",
+          "shape": "sphere",
+          "position": [
+            0,
+            1.4,
+            0
+          ],
+          "size": [
+            0.3,
+            0.3,
+            0.3
+          ],
+          "color": "#a5a8ad"
+        }
+      ]
+    }
+  },
+  "shots": [
+    {
+      "id": "V01_S01",
+      "video_id": "V01",
+      "scene": "studio",
+      "title": "人物推进",
+      "duration_s": 6,
+      "camera": {
+        "position": [
+          0,
+          1.6,
+          5
+        ],
+        "target": [
+          0,
+          1,
+          0
+        ],
+        "focal_mm": 35
+      },
+      "motion": {
+        "duration_s": 6,
+        "ease": "smooth",
+        "keys": [
+          {
+            "t": 0,
+            "position": [
+              0,
+              1.6,
+              5
+            ],
+            "target": [
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "t": 1,
+            "position": [
+              1,
+              1.6,
+              3
+            ],
+            "target": [
+              0,
+              1,
+              0
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

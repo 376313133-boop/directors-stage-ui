@@ -1,0 +1,416 @@
+{
+  "version": 1,
+  "title": "交接场景",
+  "output": {
+    "width": 640,
+    "height": 360,
+    "fps": 24
+  },
+  "scenes": {
+    "studio": {
+      "background": "#e4e9ed",
+      "ground": true,
+      "objects": [
+        {
+          "id": "back_wall",
+          "shape": "box",
+          "position": [
+            0,
+            0,
+            -3.25
+          ],
+          "size": [
+            9.6,
+            3.5,
+            0.18
+          ],
+          "color": "#c5cfd7",
+          "label": "背景墙"
+        },
+        {
+          "id": "door_left",
+          "shape": "box",
+          "position": [
+            -3.38,
+            0,
+            -3.12
+          ],
+          "size": [
+            0.12,
+            2.26,
+            0.15
+          ],
+          "color": "#8193a1",
+          "label": "门框左柱"
+        },
+        {
+          "id": "door_right",
+          "shape": "box",
+          "position": [
+            -2.12,
+            0,
+            -3.12
+          ],
+          "size": [
+            0.12,
+            2.26,
+            0.15
+          ],
+          "color": "#8193a1",
+          "label": "门框右柱"
+        },
+        {
+          "id": "door_top",
+          "shape": "box",
+          "position": [
+            -2.75,
+            2.16,
+            -3.12
+          ],
+          "size": [
+            1.38,
+            0.1,
+            0.15
+          ],
+          "color": "#8193a1",
+          "label": "门梁"
+        },
+        {
+          "id": "window_inset",
+          "shape": "box",
+          "position": [
+            2.58,
+            1.16,
+            -3.12
+          ],
+          "size": [
+            1.92,
+            1.28,
+            0.1
+          ],
+          "color": "#f2f3ed",
+          "label": "窗口"
+        },
+        {
+          "id": "table",
+          "shape": "box",
+          "position": [
+            0.22,
+            0,
+            0.3
+          ],
+          "size": [
+            1.2,
+            0.86,
+            0.8
+          ],
+          "color": "#738692",
+          "label": "桌体"
+        },
+        {
+          "id": "table_top",
+          "shape": "box",
+          "position": [
+            0.22,
+            0.86,
+            0.3
+          ],
+          "size": [
+            1.37,
+            0.08,
+            0.95
+          ],
+          "color": "#91a2ae",
+          "label": "桌面"
+        },
+        {
+          "id": "prop",
+          "shape": "sphere",
+          "position": [
+            0.24,
+            0.94,
+            0.34
+          ],
+          "size": [
+            0.32,
+            0.32,
+            0.32
+          ],
+          "color": "#e6b54f",
+          "label": "交接道具"
+        },
+        {
+          "id": "person_a",
+          "shape": "cylinder",
+          "position": [
+            -1.18,
+            0,
+            -0.1
+          ],
+          "size": [
+            0.6,
+            1.39,
+            0.5
+          ],
+          "color": "#527f9b",
+          "label": "演员 A",
+          "actor_id": "person_a"
+        },
+        {
+          "id": "person_a_head",
+          "shape": "sphere",
+          "position": [
+            -1.18,
+            1.39,
+            -0.1
+          ],
+          "size": [
+            0.36,
+            0.35,
+            0.36
+          ],
+          "color": "#6d9ebc",
+          "label": "演员 A 头部",
+          "actor_id": "person_a"
+        },
+        {
+          "id": "person_b",
+          "shape": "cylinder",
+          "position": [
+            1.5,
+            0,
+            -0.36
+          ],
+          "size": [
+            0.62,
+            1.43,
+            0.51
+          ],
+          "color": "#aa6e58",
+          "label": "演员 B",
+          "actor_id": "person_b"
+        },
+        {
+          "id": "person_b_head",
+          "shape": "sphere",
+          "position": [
+            1.5,
+            1.43,
+            -0.36
+          ],
+          "size": [
+            0.36,
+            0.36,
+            0.36
+          ],
+          "color": "#cf9477",
+          "label": "演员 B 头部",
+          "actor_id": "person_b"
+        }
+      ]
+    }
+  },
+  "shots": [
+    {
+      "id": "S01",
+      "scene": "studio",
+      "title": "建立空间",
+      "shot_size": "全景",
+      "angle": "正侧",
+      "group": "白模示例",
+      "camera": {
+        "position": [
+          0.15,
+          2.2,
+          6.45
+        ],
+        "target": [
+          0.05,
+          1.08,
+          -0.35
+        ],
+        "focal_mm": 28
+      },
+      "duration_s": 6
+    },
+    {
+      "id": "S02",
+      "scene": "studio",
+      "title": "演员 A",
+      "shot_size": "中景",
+      "angle": "平视",
+      "group": "白模示例",
+      "camera": {
+        "position": [
+          0.3,
+          1.61,
+          2.8
+        ],
+        "target": [
+          -1.18,
+          1.28,
+          -0.1
+        ],
+        "focal_mm": 48
+      },
+      "duration_s": 5
+    },
+    {
+      "id": "S03",
+      "scene": "studio",
+      "title": "演员 B",
+      "shot_size": "近景",
+      "angle": "轻手持",
+      "group": "白模示例",
+      "camera": {
+        "position": [
+          0.25,
+          1.44,
+          2.64
+        ],
+        "target": [
+          1.5,
+          1.42,
+          -0.36
+        ],
+        "focal_mm": 62
+      },
+      "duration_s": 5,
+      "camera_effect": {
+        "type": "handheld",
+        "intensity": 0.35,
+        "seed": 7
+      }
+    },
+    {
+      "id": "S04",
+      "scene": "studio",
+      "title": "交接道具",
+      "shot_size": "特写",
+      "angle": "桌面高度",
+      "group": "白模示例",
+      "camera": {
+        "position": [
+          -0.67,
+          1.3,
+          2.03
+        ],
+        "target": [
+          0.24,
+          1.1,
+          0.34
+        ],
+        "focal_mm": 70
+      },
+      "duration_s": 4
+    },
+    {
+      "id": "S05",
+      "scene": "studio",
+      "title": "双人站位",
+      "shot_size": "双人镜头",
+      "angle": "高机位",
+      "group": "白模示例",
+      "camera": {
+        "position": [
+          0.96,
+          4.05,
+          4.41
+        ],
+        "target": [
+          0.16,
+          0.78,
+          0.03
+        ],
+        "focal_mm": 37
+      },
+      "duration_s": 6
+    },
+    {
+      "id": "S06",
+      "scene": "studio",
+      "title": "绕过桌台",
+      "shot_size": "广角",
+      "angle": "FPV",
+      "group": "白模示例",
+      "camera": {
+        "position": [
+          -3.3,
+          0.65,
+          4.9
+        ],
+        "target": [
+          -0.5,
+          1.04,
+          0.3
+        ],
+        "focal_mm": 23
+      },
+      "still_at": 0.55,
+      "motion": {
+        "duration_s": 4,
+        "ease": "smooth",
+        "keys": [
+          {
+            "t": 0.0,
+            "position": [
+              -3.3,
+              0.65,
+              4.9
+            ],
+            "target": [
+              -0.5,
+              1.04,
+              0.3
+            ]
+          },
+          {
+            "t": 0.3,
+            "position": [
+              -2.2,
+              0.8,
+              3.2
+            ],
+            "target": [
+              -0.2,
+              1.1,
+              0.3
+            ]
+          },
+          {
+            "t": 0.65,
+            "position": [
+              0.6,
+              1.3,
+              2.25
+            ],
+            "target": [
+              0.28,
+              1.2,
+              0.27
+            ]
+          },
+          {
+            "t": 1.0,
+            "position": [
+              2.7,
+              1.62,
+              3.55
+            ],
+            "target": [
+              0.24,
+              1.23,
+              0.1
+            ]
+          }
+        ]
+      },
+      "duration_s": 4,
+      "camera_effect": {
+        "type": "fpv",
+        "intensity": 0.65
+      }
+    }
+  ],
+  "target_duration_s": 30
+}

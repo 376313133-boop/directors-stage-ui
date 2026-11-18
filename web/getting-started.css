@@ -1,0 +1,35 @@
+/* Guidance stays in the document flow so the stage remains directly usable. */
+.getting-started { margin:0 0 14px; padding:14px 16px 11px; border:1px solid #ffffff26; border-radius:14px; background:linear-gradient(115deg,#18191cec,#0f1013ed); }
+.getting-started[hidden] { display:none!important; }
+.quick-guide-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; }
+.quick-guide-heading h2 { font-size:15px; line-height:1.4; margin:0; font-weight:650; }
+.quick-guide-heading p { margin:3px 0 0; color:#9a9da4; font-size:11px; }
+.quick-guide-close { flex:none; min-height:29px; padding:4px 9px; font-size:11px; border-radius:7px; background:#ffffff06; color:#b6b9c0; border-color:#ffffff18; }
+.quick-guide-tabs { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; margin-top:12px; }
+.quick-guide-tab { display:flex; gap:8px; align-items:center; justify-content:flex-start; min-width:0; min-height:37px; padding:6px 10px; border:1px solid #ffffff13; background:#ffffff03; border-radius:8px; color:#a5a7ae; font-size:12px; text-align:left; }
+.quick-guide-tab[aria-selected=true] { color:#f3f3f5; border-color:#ffffff3b; background:#ffffff0e; }
+.quick-guide-number { color:#767a83; font:10px/1.4 ui-monospace,monospace; }
+.quick-guide-tab[aria-selected=true] .quick-guide-number { color:#ff5a60; }
+.quick-guide-content { margin:13px 2px 8px; display:grid; grid-template-columns:minmax(0,1fr) auto; gap:4px 18px; align-items:start; }
+.quick-guide-content h3 { margin:0; color:#dedfe3; font-size:12px; font-weight:650; }
+.quick-guide-content>p { grid-column:1; margin:0; color:#aeb1b9; font-size:12px; line-height:1.7; max-width:840px; }
+.quick-guide-actions { grid-column:2; grid-row:1/3; align-self:center; display:flex; gap:7px; flex-wrap:wrap; justify-content:flex-end; }
+.quick-guide-actions button { min-height:31px; padding:5px 10px; font-size:11px; border-radius:7px; }
+.quick-guide-locate { color:#c8cbd1; background:#ffffff04; border-color:#ffffff1c; }
+.quick-guide-next { background:#e8e8ec; color:#17181c; border-color:#e8e8ec; }
+.quick-guide-extra { border-top:1px solid #ffffff10; padding-top:7px; margin-top:9px; }
+.quick-guide-extra>summary { font-size:11px; cursor:pointer; color:#a6a9b0; width:fit-content; }
+.quick-guide-extra-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px 24px; margin:12px 1px; }
+.quick-guide-extra h4 { font-size:12px; color:#d0d3da; margin:0 0 4px; font-weight:600; }
+.quick-guide-extra p { font-size:11px; line-height:1.7; color:#a0a4ad; margin:0; }
+.quick-guide-storage { color:#848994; font-size:10px; margin:8px 1px 0; line-height:1.6; }
+.quick-guide-storage::before { content:""; display:inline-block; width:4px; height:4px; margin-right:6px; vertical-align:2px; border-radius:50%; background:#858b96; }
+.quick-guide-feedback { margin:6px 1px 0; font-size:11px; color:#e4e5ea; }
+.quick-guide-feedback:empty { display:none; }
+.stage-guide-focus { outline:2px solid #ff525bcc!important; outline-offset:4px; }
+.getting-started :focus-visible,.guide-trigger:focus-visible { outline:2px solid #d7d9e0; outline-offset:3px; }
+.top-actions .guide-trigger { display:inline-flex; align-items:center; justify-content:center; gap:6px; flex:none; padding:4px 8px; min-height:32px; border:1px solid #ffffff20; border-radius:7px; font-size:11px; color:#c6c9cf; background:#ffffff05; }
+.guide-question { width:16px; height:16px; display:inline-grid; place-items:center; border:1px solid currentColor; border-radius:50%; font:11px/1 system-ui; }
+@media(max-width:610px){.top-actions .guide-trigger-label{display:none}.top-actions .guide-trigger{width:30px;padding:0}}
+@media(max-width:1050px){.quick-guide-content{grid-template-columns:minmax(0,1fr)}.quick-guide-actions{grid-row:auto;grid-column:1;justify-content:flex-start;margin-top:5px}}
+@media(max-width:610px){.getting-started{padding:12px 11px;border-radius:12px}.quick-guide-heading{gap:8px}.quick-guide-heading h2{font-size:14px}.quick-guide-heading p{font-size:10px}.quick-guide-close{font-size:10px;min-height:28px}.quick-guide-tabs{gap:5px;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:10px}.quick-guide-tab{font-size:11px;min-height:32px;padding:5px 8px;gap:6px}.quick-guide-content>p{font-size:11px;line-height:1.7}.quick-guide-extra-grid{grid-template-columns:minmax(0,1fr);gap:11px}.quick-guide-storage{font-size:10px}.top-actions .guide-trigger{width:27px;min-height:30px}.guide-question{width:15px;height:15px}}

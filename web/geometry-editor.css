@@ -1,0 +1,40 @@
+.geometry-editor { padding:16px; margin-top:13px; border:1px solid var(--edge,rgba(255,255,255,.15)); border-radius:17px; background:rgba(14,14,14,.76); }
+.ge-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.ge-heading h2 { font-size:16px; }
+.ge-scene { color:#999; font-size:11px; max-width:50%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ge-note { margin:7px 0 12px; color:#989e9a; font-size:12px; }
+.ge-kinds { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+.ge-kind { text-align:left; display:grid; grid-template-columns:22px 1fr; column-gap:8px; padding:11px; border-radius:11px; }
+.ge-kind strong { font-size:12px; font-weight:600; }
+.ge-kind small { grid-column:2; font-size:10px; color:#939b96; white-space:nowrap; }
+.ge-kind[aria-pressed=true] { border-color:#adc5b5; background:#b9d5c415; }
+.ge-icon { grid-row:1/3; color:#d1d8d3; width:20px; height:20px; align-self:center; }.ge-icon svg { width:100%; height:100%; }
+.ge-form { display:flex; align-items:center; gap:16px; margin:13px 0 8px; }
+.ge-name { display:flex; align-items:center; gap:9px; flex:1; font-size:11px; color:#a0aaa3; }.ge-name>span { white-space:nowrap; }
+.ge-name input { width:100%; max-width:360px; border:1px solid var(--edge); background:#ffffff07; padding:6px 9px; border-radius:8px; font-size:12px; }
+.ge-colors { display:flex; gap:5px; }.ge-color { width:24px; min-height:24px; padding:0; border-radius:50%; border:2px solid transparent; background:var(--swatch); box-shadow:inset 0 0 0 3px #111; }
+.ge-color[aria-pressed=true] { border-color:#eee; }.ge-color:hover:not(:disabled) { background:var(--swatch); }
+.ge-ranges { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+.ge-size { display:grid; grid-template-columns:auto minmax(40px,1fr) 48px; align-items:center; gap:9px; font-size:11px; color:#a3ada6; min-height:35px; }
+.ge-size input { width:100%; min-width:0; accent-color:#b9d5c4; }.ge-size output { text-align:right; font-variant-numeric:tabular-nums; color:#d1d9d4; }
+.ge-actions { display:flex; gap:12px; align-items:center; margin-top:8px; }.ge-add { background:#eee; color:#161816; border-color:#eee; font-size:12px; font-weight:650; padding:7px 14px; }.ge-add:hover:not(:disabled) { background:#fff; border-color:#fff; }
+.ge-impact { color:#9ea8a1; font-size:11px; }.ge-status { margin-top:8px; color:#bacabf; font-size:12px; }.ge-status:empty { display:none; }
+.ge-selected { margin-top:12px; padding-top:10px; border-top:1px solid var(--edge); }.ge-selected summary { cursor:pointer; font-size:12px; color:#c5d1c9; }.ge-selected-name { margin-top:8px; font-size:11px; color:#9ca79f; }
+@media(max-width:950px){ .ge-ranges { grid-template-columns:1fr; gap:0; }.ge-size { grid-template-columns:60px 1fr 48px; } }
+@media(max-width:610px){ .geometry-editor{padding:11px;}.ge-kinds { grid-template-columns:repeat(2,minmax(0,1fr)); }.ge-form { flex-wrap:wrap; gap:10px; }.ge-name { flex-basis:100%; }.ge-actions { flex-wrap:wrap; }.ge-impact{font-size:10px;} }
+/* Placement is explicit; common small dimensions get most of the slider travel. */
+.ge-size { grid-template-columns:36px minmax(45px,1fr) 68px 14px; gap:7px; }
+.ge-size input[type=number] { width:68px; padding:5px 6px; border:1px solid var(--edge); border-radius:7px; background:#ffffff07; color:#e3eae6; font-variant-numeric:tabular-nums; text-align:right; font-size:12px; }
+.ge-size input[type=number]:invalid { border-color:#c48e8e; }
+.ge-size-unit { color:#87938c; font-size:10px; }
+.ge-size-tools { display:flex; justify-content:space-between; align-items:center; gap:10px; margin:2px 0 13px; color:#87938c; font-size:10px; }
+.ge-size-reset { min-height:27px; padding:3px 8px; font-size:10px; border-color:#ffffff16; }
+.ge-placement { display:flex; align-items:center; flex-wrap:wrap; gap:6px; padding:11px 0; border-top:1px solid var(--edge); }
+.ge-placement-label { font-size:12px; color:#bdc8c1; margin-right:6px; }
+.ge-placement-choice { padding:4px 10px; min-height:31px; font-size:12px; border-radius:8px; }
+.ge-placement-choice[aria-pressed=true] { background:#bddbc71a; border-color:#b2cdbb; color:#edf7f0; }
+.ge-cancel,.ge-locate { min-height:33px; padding:5px 10px; font-size:11px; }
+.ge-status.is-placement { background:#badbc610; border:1px solid #badbc630; padding:9px 11px; border-radius:9px; color:#d1e5d9; }
+.ge-status.is-blocked { color:#cadad0; }
+@media(max-width:950px){.ge-size{grid-template-columns:50px minmax(60px,1fr) 74px 15px}.ge-size input[type=number]{width:74px}}
+@media(max-width:610px){.ge-size{grid-template-columns:34px minmax(40px,1fr) 67px 12px}.ge-size input[type=number]{width:67px}.ge-placement{gap:5px}.ge-placement-label{flex-basis:100%}.ge-placement-choice{font-size:11px;padding-inline:8px}.ge-size-tools>span{max-width:60%}}

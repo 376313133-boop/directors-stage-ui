@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="dark">
+<title>导演片场 · Director’s Stage</title>
+<link rel="icon" type="image/svg+xml" href="director-stage.svg?v=3">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="timeline-editor.css">
+<script src="i18n.js" defer></script>
+<script src="i18n-static.js" defer></script>
+<script src="i18n-panels.js" defer></script>
+<script src="i18n-guide.js" defer></script>
+<script src="i18n-handoff.js" defer></script>
+<script src="i18n-naming.js" defer></script>
+<script src="naming.js" defer></script>
+
+<script src="timeline-editor.js" defer></script>
+<script src="geometry-editor.js" defer></script>
+<script src="state-engine.js" defer></script>
+<script src="time-effects.js" defer></script>
+<script src="cinema-presets.js" defer></script>
+
+<script src="frontend-host.js" defer></script>
+<script type="module" src="app.js"></script>
+<script type="module" src="scene-thumbnails.js"></script>
+<script type="module" src="shot-thumbnails.js"></script>
+<script src="i18n-shot-manager.js" defer></script>
+<link rel="stylesheet" href="shot-manager.css">
+<script type="module" src="shot-manager.js"></script>
+<script type="module" src="stage-view-controls.js"></script>
+<link rel="stylesheet" href="object-picker.css">
+<script type="module" src="object-picker.js"></script>
+<script type="module" src="motion-options.js"></script>
+<link rel="stylesheet" href="state-editor.css">
+<script type="module" src="state-editor.js"></script>
+<script type="module" src="reference-viewer.js"></script><link rel="stylesheet" href="observe-view.css"><script type="module" src="observe-view.js"></script>
+<link rel="stylesheet" href="geometry-editor.css">
+<link rel="stylesheet" href="getting-started.css">
+<script type="module" src="getting-started.js"></script>
+<script src="i18n-beginner.js" defer></script>
+<link rel="stylesheet" href="beginner-controls.css">
+<script type="module" src="beginner-controls.js"></script>
+
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="identity">
+      <span class="mark" aria-hidden="true" translate="no" data-i18n-skip><img src="director-stage.svg?v=3" alt="" width="44" height="44"></span>
+      <div class="identity-text"><div class="brand-name" translate="no" data-i18n-skip><img class="brand-wordmark" src="director-stage-wordmark.svg" alt="Director’s Stage" width="284" height="32"><strong data-brand-zh>导演片场</strong></div><span id="project-title" class="project-title">正在载入</span></div>
+    </div>
+    <label class="language-control"><svg aria-hidden="true" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.5"/><path d="M2.5 10h15M10 2.5c4 4 4 11 0 15-4-4-4-11 0-15Z"/></svg><select id="ui-language" aria-label="界面语言" translate="no" data-i18n-skip><option value="zh">中文</option><option value="en">English</option><option value="ja">日本語</option><option value="ko">한국어</option></select></label>
+    <div class="top-actions">
+      <button id="guide-open" class="guide-trigger" type="button" aria-label="使用指引" title="使用指引" aria-controls="getting-started" aria-expanded="false"><span aria-hidden="true" class="guide-question">?</span><span class="guide-trigger-label">使用指引</span></button>
+      <label class="check-label compare-control"><input id="compare-before" type="checkbox"><span>修改前对照</span></label><span id="compare-label" class="compare-label" role="status" hidden></span><div class="history-actions" role="group" aria-label="编辑历史"><button id="undo" type="button" title="撤销 · ⌘Z" aria-label="撤销" disabled>↶</button><button id="redo" type="button" title="重做 · ⇧⌘Z" aria-label="重做" disabled>↷</button></div><span id="save-status" role="status">正在连接</span>
+      <input id="project-file" type="file" accept=".json,application/json" hidden>
+      <button id="open-project" class="secondary" type="button">打开工程</button>
+      <button id="export-changes" class="secondary" type="button" disabled>导出修改</button>
+      <button id="save" class="primary" type="button" disabled>保存工程</button>
+    </div>
+  </div>
+</header>
+
+<main class="layout" aria-busy="true">
+  <aside class="shot-rail glass" aria-label="项目镜头">
+    <div class="panel-title"><h2>项目片场</h2><span id="shot-count" class="number-chip" aria-label="项目镜头数">—</span></div>
+    <div class="navigation-tabs" role="group" aria-label="镜头目录排列方式"><button type="button" data-navigation-mode="video" aria-pressed="true">按视频</button><button type="button" data-navigation-mode="scene" aria-pressed="false">按场景</button></div><div id="scene-count" class="scene-count"></div>
+    <div id="shot-list" class="shot-list" aria-label="按视频排列的镜头"></div>
+  </aside>
+
+  <section class="workspace">
+    <div id="navigation-alert" class="navigation-alert" role="status" hidden><span id="navigation-message"></span><button id="navigation-home" type="button">查看全部片场</button></div>
+    <div class="section-heading">
+      <div class="shot-heading"><span id="current-video-name" class="current-video-name" hidden></span><div class="shot-heading-line"><span id="shot-id" class="mono shot-identifier"></span><h1 id="shot-title">正在载入片场</h1></div></div>
+      <span id="scope-label" class="scope-label">仅编辑当前镜头</span>
+    </div>
+
+    <details id="shot-description" class="shot-description" hidden>
+      <summary id="shot-description-summary" title="展开查看完整说明">镜头说明</summary>
+      <div class="shot-description-body">
+        <div id="shot-original-section"><h3 id="shot-original-label">原始名称</h3><p id="shot-original-title"></p></div>
+        <div id="shot-description-section"><h3 id="shot-description-label">详细说明</h3><p id="shot-description-text"></p></div>
+      </div>
+    </details>
+
+    <section id="getting-started" class="getting-started" aria-label="片场使用指引" hidden data-i18n-skip></section>
+
+    <div class="views" aria-label="固定片场监看">
+      <section class="view top-view glass">
+        <div class="view-header">
+          <div class="view-tabs" role="group" aria-label="片场与参考"><button id="view-layout" type="button" aria-pressed="true">片场布局</button><button id="view-reference" type="button" aria-pressed="false" hidden>原片对照</button></div>
+          <div class="map-view-actions"><button id="locate-selected" class="text-button" type="button" title="在左侧片场找到当前主体，不改变拍摄机位">定位主体</button><button id="fit" class="text-button" type="button" title="在左侧片场显示所有主体和摄影机" aria-label="查看全场">查看全场 <span class="glyph glyph-fit" aria-hidden="true"></span></button></div>
+        </div>
+        <div id="stage-controls" class="stage-controls">
+          <select id="stage-view" aria-label="片场观察角度" hidden><option value="free" selected>自由 3D</option><option value="top2d">俯视布局</option><option value="front">正面</option><option value="back">背面</option><option value="left">左侧</option><option value="right">右侧</option></select>
+          <div id="stage-view-options" class="stage-view-options" role="group" aria-label="片场观察角度"></div>
+          <div class="stage-observe-tools"><label class="stage-wall-toggle" title="仅让左侧观察中的墙体半透明，不影响拍摄画面和导出"><input type="checkbox" id="stage-walls">透视墙体</label><button id="use-observe-view" type="button" class="text-button" title="将左侧观察位置直接设为拍摄机位，可点还原撤回">用此机位</button></div>
+        </div>
+        <div id="layout-pane" class="map-surface"><canvas id="observe-canvas" aria-label="三维片场，拖空白观察，点选主体后拖动位置"></canvas><canvas id="map" hidden aria-label="俯视场景，可拖动摄影机、注视点和主体"></canvas><div id="placement-hint" class="placement-hint" hidden><span id="placement-label">在图中点一下放置主体</span><button id="placement-cancel" type="button">取消放置</button></div></div>
+        <div id="reference-pane" class="reference-pane" hidden><video id="reference-video" playsinline muted preload="metadata" aria-label="与当前分镜同步的原片"></video><p id="reference-state" role="status">正在载入参考视频…</p><button id="reference-retry" type="button" hidden>重新载入</button><span id="reference-time" class="reference-time mono"></span></div><div class="legend"><span><i class="cam"></i>摄影机</span><span><i class="aim"></i>注视点</span><span><i class="obj"></i>主体</span><span class="map-gesture" id="stage-view-caption">观察视角</span></div>
+      </section>
+      <section class="view preview glass">
+        <div class="view-header">
+          <h2><span class="glyph glyph-camera" aria-hidden="true"></span>摄影机取景</h2>
+          <div class="preview-actions"><select id="guide-mode" aria-label="构图辅助线"><option value="none">无辅助线</option><option value="thirds">三分线</option><option value="center">中心线</option><option value="golden">黄金分割</option><option value="safe">安全框</option><option value="cinema-239">2.39:1 电影画幅</option><option value="cinema-185">1.85:1 电影画幅</option><option value="frame-43">4:3 画幅</option></select><select id="guide-color" aria-label="辅助线颜色" title="辅助线颜色"><option value="red" selected>红色</option><option value="white">白色</option><option value="cyan">青色</option></select><button id="pan-preview" hidden class="text-button" type="button" aria-pressed="false" title="开启后拖动取景画面，让摄影机和注视点一起平移">平移取景</button><button id="snapshot" class="text-button" type="button" aria-haspopup="dialog" title="下载当前帧，或标记到工程数据">当前帧 <span id="snapshot-count"></span></button><span id="preview-lens" class="mono preview-lens">—</span></div>
+        </div>
+        <div class="preview-surface"><div id="empty-scene-preview" class="empty-scene-preview" hidden><span class="empty-scene-symbol" aria-hidden="true">◻</span><strong>此场尚未拆镜</strong><span>在左侧观察空间<br>让 Agent 为这场戏继续安排镜头</span></div><canvas id="preview" aria-label="摄影机实时构图，拖动画面调整构图"></canvas></div>
+        <div class="timeline">
+          <button id="play" type="button" class="icon-button play" aria-label="播放" title="播放">▶</button>
+          <input type="range" id="time" min="0" max="1000" value="0" aria-label="当前镜头时间">
+          <output id="time-value" class="mono" aria-label="当前时间与镜头总时长" title="当前时间 / 镜头总时长">0.0 / 4.0 s</output>
+        </div>
+        <div class="camera-pan-row">
+          <span>构图平移</span>
+          <div class="pan-directions" id="pan-directions" role="group" aria-label="摄影机构图平移">
+            <button class="icon-button" type="button" data-pan-x="-1" data-pan-y="0" title="向左平移，长按连续平移" aria-label="向左平移">←</button>
+            <button class="icon-button" type="button" data-pan-x="0" data-pan-y="1" title="向上平移，长按连续平移" aria-label="向上平移">↑</button>
+            <button class="icon-button" type="button" data-pan-x="0" data-pan-y="-1" title="向下平移，长按连续平移" aria-label="向下平移">↓</button>
+            <button class="icon-button" type="button" data-pan-x="1" data-pan-y="0" title="向右平移，长按连续平移" aria-label="向右平移">→</button>
+          </div>
+          <label class="number-input pan-step-label"><input id="pan-step" type="number" min="0.01" max="10" step="0.05" value="0.25" aria-label="每次平移距离（米）"><span>m</span></label>
+          <span class="camera-pan-help">直接拖画面 · 方向键长按微调</span>
+        </div>
+      </section>
+<div class="edit-dock"><div class="quick-framing"><select id="framing-preset" aria-label="快速景别构图"><option value="wide">环境全景</option><option value="extreme-wide">大远景</option><option value="full">人物全身</option><option value="medium">人物中景</option><option value="medium-close">人物中近景</option><option value="close">人物近景</option><option value="extreme-close">人物特写</option><option value="two-shot">双人构图</option><option value="over_shoulder">过肩构图</option></select><button id="apply-framing" type="button" title="重复点击切换下一个主体">换个主体</button><span id="composition-status" role="status"></span></div><div class="edit-confirm"><span id="edit-status" role="status">调整即生效 · 仅保存在此浏览器</span><button id="revert-edit" type="button" title="还原上次调整" disabled><span aria-hidden="true">↶</span> 还原</button></div></div>
+    </div>
+
+    <p id="scene-empty-note" class="scene-empty-note glass" hidden>正在查看共享片场空间。此场还没有正式镜头，可自由观察；机位、走位与快照在 Agent 建立镜头后开放。</p>
+    <section id="basic-settings" class="basic-settings glass" aria-label="基础参数" data-i18n-skip></section>
+    <details id="advanced-settings" class="advanced-settings">
+      <summary><span><strong data-beginner-text="高级参数">高级参数</strong><small data-beginner-text="路线、人物动作、焦距等">路线、人物动作、焦距等</small></span><span class="advanced-toggle" data-beginner-text="展开">展开</span></summary>
+      <div class="advanced-content">
+    <section class="settings timing-settings glass" aria-labelledby="path-title">
+      <div class="setting-head"><div><h2 id="path-title">时间与调度</h2><p>拖白线选时刻 · 右键删除途经点</p></div></div>
+      <div class="path-track-row"><span class="object-picker-label">编辑对象</span><div id="object-picker"></div><select hidden id="path-track" aria-label="选择摄影机或主体路线"><option value="camera">摄影机路线</option></select><output id="actor-current-state" role="status"></output></div><section class="settings subject-settings inline-actor" id="entity-setting" aria-label="主体站位">
+        <p id="subject-time-edit-note" class="subject-time-edit-note" hidden>主体时间效果已开启 请先恢复正常主体时间 再编辑走位或状态</p><div class="setting-head"><div><h2>当前站位</h2></div><select id="entity" aria-label="选择主体"></select></div>
+        <div class="slider-list">
+          <div class="slider-row"><label for="subject-x-slider">场地左 / 右</label><input type="range" id="subject-x-slider" min="-12" max="12" step=".05"><output id="subject-x-slider-value" for="subject-x-slider">— m</output></div>
+          <div class="slider-row"><label for="subject-z-slider">场地前 / 后</label><input type="range" id="subject-z-slider" min="-12" max="12" step=".05"><output id="subject-z-slider-value" for="subject-z-slider">— m</output></div>
+          <div class="slider-row"><label for="subject-y-slider">离地高度</label><input type="range" id="subject-y-slider" min="-2" max="8" step=".05"><output id="subject-y-slider-value" for="subject-y-slider">— m</output></div>
+          <div class="slider-row"><label for="subject-yaw-slider">主体朝向</label><input type="range" id="subject-yaw-slider" min="-180" max="180" step="1"><output id="subject-yaw-slider-value" for="subject-yaw-slider">—°</output></div>
+        </div>
+        <div class="segments actor-options" id="actor-options" hidden><button type="button" data-actor-key="start">设为走位起点</button><button type="button" data-actor-key="end">设为走位终点</button></div>
+        <details class="precision">
+          <summary>精确位置</summary>
+          <div class="actor-coords" id="actor-coords" hidden>
+            <label>左右 <input id="actor-x" type="number" step="0.05" aria-label="主体 X 坐标"></label>
+            <label>高度 <input id="actor-y" type="number" step="0.05" aria-label="主体高度"></label>
+            <label>前后 <input id="actor-z" type="number" step="0.05" aria-label="主体 Z 坐标"></label>
+          </div>
+        </details>
+      </section><div id="camera-context"><section class="settings camera-settings inline-camera" aria-label="摄影机参数">
+        <div class="setting-head">
+          <div><h2>机位参数</h2><p id="edit-hint">先拖时间，再调机位；调整即生效。</p></div>
+          <div hidden class="segments" id="keyframes" aria-label="编辑相机时间点">
+            <button type="button" id="add-motion">添加运镜</button>
+            <button type="button" data-key="start">起点</button><button type="button" data-key="end">终点</button>
+          </div>
+        </div>
+        <div id="camera-shortcuts" class="camera-shortcuts" role="group" aria-label="摄影机快捷回正"><span>快捷机位</span><button type="button" data-camera-action="reset-orientation" title="水平旋转、俯仰和侧倾归零，保留注视点、距离及焦距">角度回正</button><button type="button" data-camera-action="level" title="保留绕拍方向，与注视点等高，侧倾归零">水平机位</button><button type="button" data-camera-action="top" title="从注视点正上方取景，保留距离与焦距">正顶视</button></div>
+        <div class="camera-grid">
+          <div class="sphere-cell">
+            <canvas id="camera-orb" width="192" height="192" aria-label="球形绕拍，拖动调整水平和俯仰角"></canvas>
+            <span class="sphere-caption">左右环绕 · 上下翻转</span>
+          </div>
+          <div class="slider-list">
+            <div class="slider-row"><label for="azimuth-slider">水平旋转</label><input type="range" id="azimuth-slider" min="-180" max="180" step="1"><output id="azimuth-slider-value" for="azimuth-slider">0°</output><button type="button" class="camera-param-reset" data-camera-param="yaw" aria-label="水平旋转归零" title="水平旋转归零">↺</button></div>
+            <div class="slider-row"><label for="elevation-slider">仰角 / 俯角</label><input type="range" id="elevation-slider" min="-180" max="180" step="1"><output id="elevation-slider-value" for="elevation-slider">0°</output><button type="button" class="camera-param-reset" data-camera-param="pitch" aria-label="仰俯角归零" title="仰俯角归零">↺</button></div>
+            <div class="slider-row"><label for="roll-slider">画面侧倾</label><input type="range" id="roll-slider" min="-180" max="180" step="1"><output id="roll-slider-value" for="roll-slider">0°</output><button type="button" class="camera-param-reset" data-camera-param="roll" aria-label="侧倾归零" title="侧倾归零">↺</button></div>
+            <div class="slider-row"><label for="distance-slider">离注视点</label><input type="range" id="distance-slider" min=".15" max="20" step=".05"><output id="distance-slider-value" for="distance-slider">— m</output><button type="button" class="camera-param-reset" data-camera-param="distance" aria-label="恢复上次调整前距离" title="恢复上次调整前距离">↺</button></div>
+            <div class="slider-row"><label for="height-slider">离地高度</label><input type="range" id="height-slider" min=".05" max="10" step=".05"><output id="height-slider-value" for="height-slider">— m</output><button type="button" class="camera-param-reset" data-camera-param="height" aria-label="恢复上次调整前高度" title="恢复上次调整前高度">↺</button></div>
+          </div>
+        </div>
+        <details class="precision">
+          <summary>精确调整与注视点</summary>
+          <div class="field-row precision-row">
+            <div class="segments" id="angle-presets"><button type="button" data-angle="-45">向左 45°</button><button type="button" data-angle="45">向右 45°</button><button type="button" id="select-target">在俯视图选注视点</button></div>
+            <div class="segments" id="height-presets"><button type="button" data-height="0.6">低机位</button><button type="button" data-height="1.6" title="仅调整高度到 1.6m；水平取景请用上方的水平机位">眼平高度</button><button type="button" data-height="3">高机位</button></div>
+            <label class="number-input"><input id="height" aria-label="摄影机精确高度（米）" type="number" min="0.05" max="50" step="0.05"><span>m</span></label>
+          </div>
+        </details>
+      <div class="lens-inline" aria-label="光学与焦距">
+        <div class="setting-head"><div><h2>焦距与镜头</h2></div><label class="number-input"><input id="focal" aria-label="精确焦距（毫米）" type="number" min="5" max="300" step="1"><span>mm</span></label></div>
+        <div class="lens-modes segments" id="lens-mode" aria-label="镜头类型">
+          <button type="button" data-lens="standard">标准</button><button type="button" data-lens="ultra-wide" title="18mm 直线广角，扩大视野">超广角</button><button type="button" data-lens="portrait" title="50mm 构图预设，保持主体大小，不模拟景深">人像 50mm</button>
+          <button type="button" data-lens="fisheye" title="弯曲边缘的超广取景">鱼眼</button>
+          <button type="button" data-lens="macro" title="近摄构图示意，不模拟真实景深">近摄</button>
+          <button type="button" data-lens="tele" title="用长焦和更远机位产生空间压缩">长焦压缩</button>
+        </div>
+        <div class="slider-row lens-slider"><label for="focal-slider">焦距</label><input type="range" id="focal-slider" min="5" max="300" step="1"><output id="focal-slider-value" for="focal-slider">— mm</output><button type="button" class="camera-param-reset" data-camera-param="focal" aria-label="恢复上次调整前焦距" title="恢复上次调整前焦距">↺</button></div>
+        <div class="presets segments" id="focal-presets" aria-label="常用焦距">
+          <button type="button" data-focal="24">24</button><button type="button" data-focal="35">35</button><button type="button" data-focal="50">50</button><button type="button" data-focal="85">85</button>
+        </div>
+      </div></section></div><p class="context-tip">先拖时间，再移动选中的摄影机或主体；这个时刻的位置会自动记下。</p><div id="path-timeline"></div>
+      <div class="legacy-timing" hidden><div class="setting-head timing-head">
+        <div><h2 id="timing-title">镜头时长与路径</h2><p id="timing-status" role="status">调整本镜长度，或给路径上的每个构图设置到达和停留时间。</p></div>
+        <div class="timing-buttons">
+          <button id="timing-mode" class="text-button" type="button">编辑路径点</button>
+          <button id="waypoint-add" class="text-button" type="button" hidden>在播放位置加点</button>
+        </div>
+      </div>
+      <div class="timing-duration">
+        <label for="shot-duration-slider">镜头总时长</label>
+        <input type="range" id="shot-duration-slider" min="0.1" max="30" step="0.1" value="4" aria-label="调整当前镜头总时长">
+        <label class="number-input timing-length"><input id="shot-duration" type="number" min="0.1" max="30" step="0.1" value="4" aria-label="当前镜头总时长（秒）"><span>秒</span></label>
+      </div>
+      <div id="timing-detail" class="timing-detail" hidden>
+        <div class="timing-detail-head"><p>点选一个路径点定位，再调整构图。</p><output id="timing-speed" aria-label="路径总览"></output></div>
+        <div class="timing-scroll">
+          <table class="timing-table">
+            <thead><tr><th scope="col">路径点</th><th scope="col">到达（秒）</th><th scope="col">停留（秒）</th><th scope="col">到下一点</th><th scope="col" class="timing-action-col">操作</th></tr></thead>
+            <tbody id="timing-keys"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    </section>
+
+
+
+<details id="state-disclosure" class="context-disclosure"><summary>状态与动作 <span>出现 · 消失 · 倒下 · 跳跃</span></summary><section id="state-editor" class="settings state-settings glass" aria-label="主体状态调度"></section></details>
+
+
+
+<details class="context-disclosure"><summary>添加物体 <span>方块 · 球体 · 圆柱 · 人物</span></summary><section id="geometry-editor" class="settings geometry-settings glass" aria-label="添加片场物体"></section></details>    <section class="settings motion-settings glass" aria-label="运镜预设">
+      <div class="setting-head"><div><h2>运镜预设</h2><p id="preset-status" role="status">选中时间轴的一段，选择预设即可调整运镜。</p></div></div>
+      <div class="preset-tabs" role="tablist" aria-label="运镜分类"><button type="button" id="preset-tab-basic" role="tab" aria-selected="true" aria-controls="motion-basic" data-preset-tab="basic">基础运镜 <span>12</span></button><button type="button" id="preset-tab-cinema" role="tab" aria-selected="false" aria-controls="motion-cinema" data-preset-tab="cinema">影视手法 <span>8</span></button></div>
+      <p id="cinema-intro" class="cinema-intro" hidden>把具体摄影手法转成可编辑路线。导演名称仅说明灵感来源，不代表完整或唯一风格。</p>
+      <div class="motion-choice-grid">
+        <div class="motion-setting-card"><div class="motion-setting-label">路径范围</div><div id="motion-scope-options" class="motion-choice-group"></div></div>
+        <div class="motion-setting-card"><div class="motion-setting-label">路径方向</div><div id="motion-direction-options" class="motion-choice-group"></div></div>
+        <div class="motion-setting-card motion-rig-card"><div class="motion-setting-label">机身质感 <span>整镜叠加</span></div><div id="rig-preset-options" class="motion-choice-group"></div><p id="rig-choice-summary" class="motion-choice-summary" aria-live="polite"></p></div>
+      </div><div hidden><select hidden id="motion-scope" aria-label="运镜作用范围"><option value="segment">当前一段</option><option value="shot">整条路线</option></select><select hidden id="motion-direction" aria-label="运动方向"><option value="1">正向</option><option value="-1">反向</option></select><select hidden id="rig-preset" aria-label="机身质感"><option value="none">稳定机位</option><option value="handheld">轻手持</option><option value="shoulder">肩扛步态</option><option value="breathing">微呼吸变焦</option><option value="fpv">FPV 侧倾</option></select></div>
+      <div id="motion-presets" role="group" aria-label="选择运镜路径"><div class="motion-grid" id="motion-basic" role="tabpanel" aria-labelledby="preset-tab-basic">
+<button type="button" data-motion-preset="push"><span aria-hidden="true"><svg class="motion-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false"><path d="M10 18V4m-4 4 4-4 4 4M5 15h2m6 0h2" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong>推进</strong><small>摄影机靠近主体</small></button>
+<button type="button" data-motion-preset="pull"><span aria-hidden="true"><svg class="motion-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false"><path d="M10 3v14m-4-4 4 4 4-4M5 6h2m6 0h2" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong>拉远</strong><small>摄影机远离主体</small></button>
+<button type="button" data-motion-preset="pan"><span aria-hidden="true"><svg class="motion-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false"><path d="M3 8c2-3 4.3-4.5 7-4.5S15 5 17 8m-3-.5 3 .5.5-3M7 13l3-3 3 3m-3-3v7" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong>横摇</strong><small>原地左右转向</small></button>
+<button type="button" data-motion-preset="truck"><span aria-hidden="true"><svg class="motion-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false"><path d="M3 10h14m-4-4 4 4-4 4M7 6l-4 4 4 4" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong>横移</strong><small>保持朝向侧移</small></button>
+<button type="button" data-motion-preset="track"><span aria-hidden="true"><svg class="motion-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false"><path d="M2.5 10h10m-3-3 3 3-3 3m6-6 2 3-2 3" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong>跟拍</strong><small>有走位时跟随</small></button>
+<button type="button" data-motion-preset="jib"><span aria-hidden="true"><svg class="motion-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false"><path d="M4 16 12 6h4m-3-3 3 3-3 3M4 13v3h3" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong>摇臂</strong><small>升降并看向主体</small></button>
+<button type="button" data-motion-preset="orbit"><span aria-hidden="true"><svg class="motion-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false"><path d="M17 9a7 7 0 1 0-2 5m-1-5h3V6m-8 4h.01" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong>绕拍</strong><small>围绕注视点移动</small></button>
+<button type="button" data-motion-preset="fpv"><span aria-hidden="true"><svg class="motion-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false"><path d="m3 14 5-7 4 5 5-8m-4 1 4-1 1 4" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong>FPV 飞行</strong><small>弯曲路线与侧倾</small></button>
+<button type="button" data-motion-preset="tilt"><span aria-hidden="true"><svg class="motion-icon" viewBox="0 0 20 20" fill="none"><path d="M6 17c-3-2-3-12 0-14m-3 2 3-2 2 3M13 4v12m-3-3 3 3 3-3" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong>俯仰摇摄</strong><small>原地抬头低头</small></button>
+<button type="button" data-motion-preset="pedestal"><span aria-hidden="true"><svg class="motion-icon" viewBox="0 0 20 20" fill="none"><path d="M10 3v14M6 7l4-4 4 4M6 13l4 4 4-4" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong>垂直升降</strong><small>机位上下平移</small></button>
+<button type="button" data-motion-preset="zoom"><span aria-hidden="true"><svg class="motion-icon" viewBox="0 0 20 20" fill="none"><path d="M3 7V3h4m6 0h4v4m0 6v4h-4m-6 0H3v-4m4-3h6m-3-3v6" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong>变焦</strong><small>机位不动改焦距</small></button>
+<button type="button" data-motion-preset="dolly_zoom"><span aria-hidden="true"><svg class="motion-icon" viewBox="0 0 20 20" fill="none"><path d="M8 4h4v12H8zM1 10h5m-2-2 2 2-2 2m15-2h-5m2-2-2 2 2 2" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong>推拉变焦</strong><small>主体大小近似保持</small></button>
+<button hidden type="button" data-motion-preset="handheld"><span aria-hidden="true"><svg class="motion-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false"><path d="M2 10h2l2-4 3 8 3-7 2 3h4" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong>手持</strong><small>自然微晃</small></button>
+<button hidden type="button" data-motion-preset="shoulder"><span aria-hidden="true"><svg class="motion-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false"><path d="M2 11h2l2-3h2l2 3h2l2-3h2l2 3" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong>肩扛</strong><small>有重量的起伏</small></button>
+<button hidden type="button" data-motion-preset="breathing"><span aria-hidden="true"><svg class="motion-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false"><path d="M2 10c2.5 0 4-4 8-4s5.5 4 8 4M2 10c2.5 0 4 4 8 4s5.5-4 8-4" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong>呼吸感</strong><small>细微焦距起伏</small></button>
+      </div><div class="motion-grid cinema-grid" id="motion-cinema" role="tabpanel" aria-labelledby="preset-tab-cinema" hidden>
+<button type="button" data-motion-preset="hitchcock_dolly_zoom" title="希区柯克推拉变焦 · 推近同时减焦 主体大小近似不变 · 当前一段或整镜"><span class="cinema-symbol" aria-hidden="true">↔</span><strong>希区柯克推拉变焦</strong><small>推近同时减焦 主体大小近似不变</small><em>当前一段或整镜</em></button>
+<button type="button" data-motion-preset="reaction_push" title="反应慢推 · 克制地靠近角色 收紧情绪 · 斯皮尔伯格灵感 · 一段或整镜"><span class="cinema-symbol" aria-hidden="true">↗</span><strong>反应慢推</strong><small>克制地靠近角色 收紧情绪</small><em>斯皮尔伯格灵感 · 一段或整镜</em></button>
+<button type="button" data-motion-preset="axial_push" title="中轴跟进 · 沿视线直推 注视点保持居中 · 库布里克灵感 · 一段或整镜"><span class="cinema-symbol" aria-hidden="true">↑</span><strong>中轴跟进</strong><small>沿视线直推 注视点保持居中</small><em>库布里克灵感 · 一段或整镜</em></button>
+<button type="button" data-motion-preset="hero_orbit" title="低角度英雄环绕 · 低机位绕主体约 120° 展示气势 · 迈克尔·贝灵感 · 一段或整镜"><span class="cinema-symbol" aria-hidden="true">◡</span><strong>低角度英雄环绕</strong><small>低机位绕主体约 120° 展示气势</small><em>迈克尔·贝灵感 · 一段或整镜</em></button>
+<button type="button" data-motion-preset="bullet_time" title="子弹时间 · 主体以 0.1 倍动作 相机正常弧绕 · 仅整镜 · 主体从 0 秒慢放"><span class="cinema-symbol" aria-hidden="true">◴</span><strong>子弹时间</strong><small>主体以 0.1 倍动作 相机正常弧绕</small><em>仅整镜 · 主体从 0 秒慢放</em></button>
+<button type="button" data-motion-preset="freeze_orbit" title="时间冻结 360° · 冻结当前可见姿态 相机完整一圈 · 仅整镜 · 冻结所有主体"><span class="cinema-symbol" aria-hidden="true">❄</span><strong>时间冻结 360°</strong><small>冻结当前可见姿态 相机完整一圈</small><em>仅整镜 · 冻结所有主体</em></button>
+<button type="button" data-motion-preset="whip_pan" title="快速甩镜 · 原地快速转向约 120° 两端停留 · 当前一段或整镜"><span class="cinema-symbol" aria-hidden="true">⇢</span><strong>快速甩镜</strong><small>原地快速转向约 120° 两端停留</small><em>当前一段或整镜</em></button>
+<button type="button" data-motion-preset="roll_through" title="滚转穿越 · 沿视线前进 同时连续滚转 360° · 当前一段或整镜"><span class="cinema-symbol" aria-hidden="true">⟳</span><strong>滚转穿越</strong><small>沿视线前进 同时连续滚转 360°</small><em>当前一段或整镜</em></button>
+      </div></div>
+      <div id="subject-time-effect" class="subject-time-effect" hidden><div><strong id="subject-time-title"></strong><p id="subject-time-detail"></p></div><button type="button" id="restore-subject-time">恢复正常主体时间</button></div>
+      <div class="motion-sliders">
+        <div class="motion-param-card"><div class="slider-row"><label for="intensity-slider">质感强度</label><input type="range" id="intensity-slider" min="0" max="100" step="1" value="50"><output id="intensity-slider-value" for="intensity-slider">50%</output></div><p id="motion-intensity-help" class="motion-param-help"></p></div>
+        <div class="motion-param-card"><div class="slider-row"><label for="travel-slider">移动距离</label><input type="range" id="travel-slider" min=".1" max="5" step=".05" value="1"><output id="travel-slider-value" for="travel-slider">1.0 m</output></div><p id="motion-travel-help" class="motion-param-help"></p></div>
+        <div class="motion-param-card" id="orbit-radius-card" hidden><div class="slider-row"><label for="orbit-radius-slider">环绕半径</label><input type="range" id="orbit-radius-slider" min=".25" max="30" step=".01" value="3"><output id="orbit-radius-slider-value" for="orbit-radius-slider">3 m</output></div><p id="orbit-radius-help" class="motion-param-help">调整整条圆弧的半径 真实遮挡保留</p></div>
+        <div class="motion-param-card" id="motion-speed-card" hidden><div class="slider-row"><label for="motion-speed-slider">平均移速</label><input type="range" id="motion-speed-slider" min=".01" max="10" step=".01" value=".1"><output id="motion-speed-slider-value" for="motion-speed-slider">0.1 m/s</output></div><p id="motion-speed-help" class="motion-param-help">改变运动完成时间 镜头总长不变</p></div>
+        <div class="motion-param-card"><div class="slider-row"><label for="motion-duration-slider">运动时长</label><input type="range" id="motion-duration-slider" min=".2" max="30" step=".1" value="4"><output id="motion-duration-slider-value" for="motion-duration-slider">4.0 s</output></div><p id="motion-duration-help" class="motion-param-help"></p></div>
+      </div>
+    </section>
+
+      </div>
+    </details>
+    <div hidden><input id="composition-guides" type="checkbox"><input id="composition-lock" type="checkbox"><input id="lock-camera" type="checkbox"><input id="lock-subject" type="checkbox"></div><section id="notice" class="notice" role="status" hidden></section>
+  </section>
+</main>
+
+<dialog id="snapshot-dialog" aria-labelledby="snapshot-title">
+  <form method="dialog" class="snapshot-card">
+    <div class="panel-title"><h2 id="snapshot-title">当前帧</h2><button class="icon-button dialog-close" type="submit" value="close" aria-label="关闭快照">×</button></div>
+    <p id="snapshot-meta" class="mono">当前镜头与时间</p>
+    <div class="snapshot-image-wrap"><img id="snapshot-image" alt="当前摄影机拍摄的快照"></div>
+    <p id="snapshot-status" role="status" aria-live="polite"></p><div id="snapshot-marks-list" class="snapshot-marks-list"></div>
+    <p class="snapshot-scope-note">标记的画面随工程和修改数据一起保存。</p><div class="snapshot-actions"><a id="snapshot-download" class="secondary" download="镜头快照.png">下载当前帧</a><button id="snapshot-save" class="primary" type="button">标记当前帧</button></div>
+  </form>
+</dialog>
+
+
+</body>
+</html>
